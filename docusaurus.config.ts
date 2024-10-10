@@ -18,7 +18,7 @@ const config: Config = {
   organizationName: 'haifengqiu', // Usually your GitHub org/user name.
   projectName: 'haifengqiu.github.io', // Usually your repo name.
   trailingSlash: false, // GitHub Pages 默认为 Docusaurus 网址链接添加末尾斜杠。 It is recommended to set a trailingSlash config (true or false, not undefined).
-
+  deploymentBranch: 'main', // 部署到的分支名
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
 
