@@ -1,5 +1,5 @@
 name: 自动部署gh-pages
-
+# github设置里要先正确设置Pages，以及Actions权限宽松
 on:
   push:
     branches: [main]
