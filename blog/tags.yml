@@ -1,0 +1,26 @@
+# 技术领域类
+asr:
+  label: asr
+  permalink: /asr
+  description: asr tag description
+
+tts:
+  label: tts
+  permalink: /tts
+  description: tts tag description
+
+kws:
+  label: kws
+  permalink: /kws
+  description: kws tag description 
+
+# 产商类
+sherpa:
+  label: sherpa
+  permalink: /sherpa
+  description: Sherpa tag description
+
+docusaurus:
+  label: docusaurus
+  permalink: /docusaurus
+  description: docusaurus tag description
