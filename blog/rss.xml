@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xsl" href="rss.xsl"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+    <channel>
+        <title>梓宏工坊 Blog</title>
+        <link>https://haifengqiu.github.io/blog</link>
+        <description>梓宏工坊 Blog</description>
+        <lastBuildDate>Wed, 09 Oct 2024 00:00:00 GMT</lastBuildDate>
+        <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
+        <generator>https://github.com/jpmonette/feed</generator>
+        <language>zh-Hans</language>
+        <item>
+            <title><![CDATA[2024-10-09-基于sherpa的本地智能语音助手入门-Java Api版]]></title>
+            <link>https://haifengqiu.github.io/blog/sherpa-java-quickstart</link>
+            <guid>https://haifengqiu.github.io/blog/sherpa-java-quickstart</guid>
+            <pubDate>Wed, 09 Oct 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[sherpa是新一代Kaldy的部署框架。这里使用sherpa-onnx来实现一个本地智能语音助手。]]></description>
+            <content:encoded><![CDATA[<p>sherpa是新一代Kaldy的部署框架。这里使用sherpa-onnx来实现一个本地智能语音助手。</p>
+<p>它将支持流式的关键词唤醒和语音识别、文本转语音、热词等，且整个过程中无需互联网，可以没有GPU，适合部署在边缘侧/用户侧设备上。</p>
+<p>考虑到java开发者和基于java的应用系统更为广泛，撰写此文，也为sherpa社区做一点微薄贡献。感谢sherpa开源社区。</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="写在前面">写在前面<a href="https://haifengqiu.github.io/blog/sherpa-java-quickstart#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2" class="hash-link" aria-label="写在前面的直接链接" title="写在前面的直接链接">​</a></h2>
+<p>为何使用sherpa？因为我们的项目需要支持本地的、实时音频流处理，且性能较好的情况下硬件资源要求尽量低一些。而sherpa提供了工程化程度高的、不依赖特定模型的、完整的语音识别解决方案，且性能表现优异（可以使用低配置的设备在浏览器中访问<a href="https://k2-fsa.github.io/sherpa/huggingface/index.html" target="_blank" rel="noopener noreferrer">官方示例</a>先体验效果和性能）。</p>
+<p>为何使用sherpa-onnx？从官方的<a href="https://k2-fsa.github.io/sherpa/intro.html" target="_blank" rel="noopener noreferrer">https://k2-fsa.github.io/sherpa/intro.html</a> 中可以看到sherpa-onnx在平台、语言、特定子领域/特性的支持度是最全面的。</p>
+<p>为何使用java api？除开简介中的因素外，java少了一些安装、依赖库冲突等问题（根据本人这种python新手在windows/ubuntu下安装和使用python api的感受，尽管成功但路径不一样，且坎坷都不一样），即java环境反而是最容易搭建成功的，对于java从业者也更容易根据调试信息来猜测api和数据用法。当然，其示例丰富度和官方支持度相比c++/python是有明显差距的。</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="基础概念">基础概念<a href="https://haifengqiu.github.io/blog/sherpa-java-quickstart#%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5" class="hash-link" aria-label="基础概念的直接链接" title="基础概念的直接链接">​</a></h2>
+<p>受限于本人技术能力，本篇介绍的概念/方法/用途不一定正确，且假设读者已经了解基本的java编程和语音识别基础理论。</p>
+<p>sherpa-onnx社区提供了预训练的模型，以及多语言的Api文档和示例代码，其中支持度最好的是c++和python。对于使用java api来构建我们的项目，需要理解我们的项目是<em><strong>通过jni来调用sherpa-onnx的动态库来使用已经预训练好的相关语音模型</strong></em>，来实现语音相关功能。并不需要安装sherpa-onnx、训练模型等。换言之，在正常普通的java项目开发的基础上，了解和学习jni的基础知识是必须的，而java的平台无关性此时会受到sherpa-onnx动态库的影响，在不同的平台上应换用不同的动态库。</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="准备环境">准备环境<a href="https://haifengqiu.github.io/blog/sherpa-java-quickstart#%E5%87%86%E5%A4%87%E7%8E%AF%E5%A2%83" class="hash-link" aria-label="准备环境的直接链接" title="准备环境的直接链接">​</a></h2>
+<p>java环境、jdk、maven等这些基础知识不再介绍。</p>
+<p>sherpa-onnx的<a href="https://k2-fsa.github.io/sherpa/onnx/index.html" target="_blank" rel="noopener noreferrer">官方文档</a>写的比较清楚，章节导航和内容长度也比较合理，建议先学习官方文档。</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="sherpa-onnx的动态库获取">sherpa-onnx的动态库获取<a href="https://haifengqiu.github.io/blog/sherpa-java-quickstart#sherpa-onnx%E7%9A%84%E5%8A%A8%E6%80%81%E5%BA%93%E8%8E%B7%E5%8F%96" class="hash-link" aria-label="sherpa-onnx的动态库获取的直接链接" title="sherpa-onnx的动态库获取的直接链接">​</a></h3>
+<p>以下内容<a href="https://k2-fsa.github.io/sherpa/onnx/java-api/index.html" target="_blank" rel="noopener noreferrer">官方文档对应章节</a>中也已描述的清楚，这里只进行补充。
+首先注意动态库是区分平台的，需要根据部署设备的架构和操作系统来选择。
+其次动态库可以选择下载官方提供的，也可以自己构建。建议选择前者，前者不满足时再考虑后者（需要搭建c++编译环境）。</p>
+<p>这里稍微注意下，windows下自行构建jni的教程在：<a href="https://github.com/k2-fsa/sherpa-onnx/issues/882" target="_blank" rel="noopener noreferrer">https://github.com/k2-fsa/sherpa-onnx/issues/882</a> 。</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="sherpa-onnx的预训练模型下载">sherpa-onnx的预训练模型下载<a href="https://haifengqiu.github.io/blog/sherpa-java-quickstart#sherpa-onnx%E7%9A%84%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%8B%E8%BD%BD" class="hash-link" aria-label="sherpa-onnx的预训练模型下载的直接链接" title="sherpa-onnx的预训练模型下载的直接链接">​</a></h3>
+<p>可以在不同章节（如ASR/TTS/Keyword spotting的对应官方文档章节）里找对应的模型下载，也可以在<a href="https://k2-fsa.github.io/sherpa/onnx/pretrained_models/index.html" target="_blank" rel="noopener noreferrer">https://k2-fsa.github.io/sherpa/onnx/pretrained_models/index.html</a> 这里统一查看。</p>
+<p>这里列举下本人项目中目前使用的模型：</p>
+<ol>
+<li>关键词检测：<a href="https://k2-fsa.github.io/sherpa/onnx/kws/pretrained_models/index.html#sherpa-onnx-kws-zipformer-wenetspeech-3-3m-2024-01-01-chinese" target="_blank" rel="noopener noreferrer">https://k2-fsa.github.io/sherpa/onnx/kws/pretrained_models/index.html#sherpa-onnx-kws-zipformer-wenetspeech-3-3m-2024-01-01-chinese</a></li>
+<li>ASR：<a href="https://k2-fsa.github.io/sherpa/onnx/pretrained_models/online-transducer/zipformer-transducer-models.html#csukuangfj-sherpa-onnx-streaming-zipformer-bilingual-zh-en-2023-02-20-bilingual-chinese-english" target="_blank" rel="noopener noreferrer">https://k2-fsa.github.io/sherpa/onnx/pretrained_models/online-transducer/zipformer-transducer-models.html#csukuangfj-sherpa-onnx-streaming-zipformer-bilingual-zh-en-2023-02-20-bilingual-chinese-english</a></li>
+<li>TTS： <a href="https://k2-fsa.github.io/sherpa/onnx/tts/pretrained_models/vits.html#aishell3-chinese-multi-speaker-174-speakers" target="_blank" rel="noopener noreferrer">https://k2-fsa.github.io/sherpa/onnx/tts/pretrained_models/vits.html#aishell3-chinese-multi-speaker-174-speakers</a></li>
+</ol>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="sherpa-onnx的java-api库及示例获取">sherpa-onnx的java api库及示例获取<a href="https://haifengqiu.github.io/blog/sherpa-java-quickstart#sherpa-onnx%E7%9A%84java-api%E5%BA%93%E5%8F%8A%E7%A4%BA%E4%BE%8B%E8%8E%B7%E5%8F%96" class="hash-link" aria-label="sherpa-onnx的java api库及示例获取的直接链接" title="sherpa-onnx的java api库及示例获取的直接链接">​</a></h3>
+<p>java api见<a href="https://k2-fsa.github.io/sherpa/onnx/java-api/build-jar.html" target="_blank" rel="noopener noreferrer">官方文档章节</a>。我这边是将源码拷到项目中，方便调试和修改。java api的源码复杂度不高，没有过度封装和抽象。</p>
+<p>java调用的示例代码在上述章节中也提到了，但确实数量较少。需要发挥一下主观能动性和大模型的能力，对比联想+连猜带蒙。</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="构建项目">构建项目<a href="https://haifengqiu.github.io/blog/sherpa-java-quickstart#%E6%9E%84%E5%BB%BA%E9%A1%B9%E7%9B%AE" class="hash-link" aria-label="构建项目的直接链接" title="构建项目的直接链接">​</a></h2>
+<p>java项目的基础结构这里不赘述。</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="jni相关的vm配置">jni相关的vm配置<a href="https://haifengqiu.github.io/blog/sherpa-java-quickstart#jni%E7%9B%B8%E5%85%B3%E7%9A%84vm%E9%85%8D%E7%BD%AE" class="hash-link" aria-label="jni相关的vm配置的直接链接" title="jni相关的vm配置的直接链接">​</a></h3>
+<p>在idea的运行配置、启动脚本里增加一个java vm的参数配置：</p>
+<div class="codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_biex"><pre tabindex="0" class="prism-code language-text codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">-Djava.library.path=我的项目路径\sherpa-onnx\libs</span><br></span></code></pre><div class="buttonGroup__atx"><button type="button" aria-label="复制代码到剪贴板" title="复制" class="clean-btn"><span class="copyButtonIcons_eSgA" aria-hidden="true"><svg viewBox="0 0 24 24" class="copyButtonIcon_y97N"><path fill="currentColor" d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"></path></svg><svg viewBox="0 0 24 24" class="copyButtonSuccessIcon_LjdS"><path fill="currentColor" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"></path></svg></span></button></div></div></div>
+<p>其中libs下放置的就是对应平台的sherpa-onnx动态库，windows下是.dll，linux下是.so。
+这个路径和目录结构都是自定义的，可以自己调整。如果是fatjar的运行方式，本目录建议放在jar外，类似于部署环境的本地环境变量/配置文件一般。</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="模型及相关文件的位置">模型及相关文件的位置<a href="https://haifengqiu.github.io/blog/sherpa-java-quickstart#%E6%A8%A1%E5%9E%8B%E5%8F%8A%E7%9B%B8%E5%85%B3%E6%96%87%E4%BB%B6%E7%9A%84%E4%BD%8D%E7%BD%AE" class="hash-link" aria-label="模型及相关文件的位置的直接链接" title="模型及相关文件的位置的直接链接">​</a></h3>
+<p>和上文的动态库类似，也是在jar包外的文件目录下，目录组织结构没有限制，和对应的java调用代码中引用的decode/encode等路径保持一致即可。</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="各模型的业务用途">各模型的业务用途<a href="https://haifengqiu.github.io/blog/sherpa-java-quickstart#%E5%90%84%E6%A8%A1%E5%9E%8B%E7%9A%84%E4%B8%9A%E5%8A%A1%E7%94%A8%E9%80%94" class="hash-link" aria-label="各模型的业务用途的直接链接" title="各模型的业务用途的直接链接">​</a></h2>
+<ol>
+<li><a href="https://k2-fsa.github.io/sherpa/onnx/kws/index.html" target="_blank" rel="noopener noreferrer">关键词检测</a>。本质是一个非常小的语音识别模型，这里用它来实现语音唤醒（一直监听音频流），类似小爱同学这种。这样就无需使用snowboy了。支持自定义、复数个关键词且不需要重新训练。</li>
+<li>语音识别。这里是在成功语音唤醒后，才会从语音唤醒模式切换到语音识别模式，对音频流进行语音识别，进行自己的业务处理。上文选用的<a href="https://k2-fsa.github.io/sherpa/onnx/pretrained_models/online-transducer/zipformer-transducer-models.html#csukuangfj-sherpa-onnx-streaming-zipformer-bilingual-zh-en-2023-02-20-bilingual-chinese-english" target="_blank" rel="noopener noreferrer">csukuangfj-sherpa-onnx-streaming-zipformer-bilingual-zh-en-2023-02-20-bilingual-chinese-english</a>模型的识别率还可以、支持中英文混合、RTF表现优秀，支持热词。</li>
+<li><a href="https://k2-fsa.github.io/sherpa/onnx/hotwords/index.html" target="_blank" rel="noopener noreferrer">热词</a>。使用热词是由于项目中有一些专业性的词汇，不设置热词的默认识别率比较低。热词也是可以自定义、复数个、不需要重新训练。</li>
+<li><a href="https://k2-fsa.github.io/sherpa/onnx/tts/index.html" target="_blank" rel="noopener noreferrer">文字转语音</a>。项目中需要文字转语音来作为交互反馈，但只会有中文，所以选择的是仅支持中文的模型。支持多种音色（但没特别标准和合适的音色）。对数字/IP这些的读法并不合适。如果有更合适的模型和方法，请评论分享给我，谢谢。</li>
+</ol>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="常见问答faqs">常见问答(FAQs)<a href="https://haifengqiu.github.io/blog/sherpa-java-quickstart#%E5%B8%B8%E8%A7%81%E9%97%AE%E7%AD%94faqs" class="hash-link" aria-label="常见问答(FAQs)的直接链接" title="常见问答(FAQs)的直接链接">​</a></h2>
+<p>先看<a href="https://k2-fsa.github.io/sherpa/onnx/faqs/index.html#frequently-asked-question-faqs" target="_blank" rel="noopener noreferrer">官方文档的FAQs</a>。</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="the-given-version-17-is-not-supported-only-version-1-to-10-is-supported-in-this-build">The given version [17] is not supported, only version 1 to 10 is supported in this build。<a href="https://haifengqiu.github.io/blog/sherpa-java-quickstart#the-given-version-17-is-not-supported-only-version-1-to-10-is-supported-in-this-build" class="hash-link" aria-label="The given version [17] is not supported, only version 1 to 10 is supported in this build。的直接链接" title="The given version [17] is not supported, only version 1 to 10 is supported in this build。的直接链接">​</a></h3>
+<p>运行时这个异常不是jdk的问题，jdk&gt;8包括17 21都行，是因为windwos电脑上System32已经有onnxruntime.dll了。
+将这个文件的所有者从TrustInstaller变更为管理员后，就可以完全控制了，将其备份，换成从sherpa官方下载jni里用的同名dll。</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="java代码少找不到错误">java代码少/找不到/错误。<a href="https://haifengqiu.github.io/blog/sherpa-java-quickstart#java%E4%BB%A3%E7%A0%81%E5%B0%91%E6%89%BE%E4%B8%8D%E5%88%B0%E9%94%99%E8%AF%AF" class="hash-link" aria-label="java代码少/找不到/错误。的直接链接" title="java代码少/找不到/错误。的直接链接">​</a></h3>
+<p>对比：对比官方的java示例代码，对比官方的python示例代码，举一反三和组合拼凑。</p>
+<p>联想：从对比的代码联想可能的api，从调试中数据结构联想可能的作用，从源码命名和注释联想可能的用法。比如asr With endpoint detection看源码有rule，猜测其作用和调整尝试。</p>
+<p>搜索：比如java的模型配置参数是有层级的（python的配置参数基本是扁平的），分散和隐藏在不同层次的config类里，那就搜索和一层层点进去看内嵌对象。</p>
+<p>大模型：使用大模型，尤其是一些copliot如通义灵码等，来更改和优化代码、理解和猜测代码、分析错误原因。</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="java的asrkws-实时语音唤醒和识别都正常但加入hotwards的设置后识别出第一句话后就会进程崩溃">Java的asr/kws 实时语音唤醒和识别都正常，但加入hotwards的设置后，识别出第一句话后就会进程崩溃<a href="https://haifengqiu.github.io/blog/sherpa-java-quickstart#java%E7%9A%84asrkws-%E5%AE%9E%E6%97%B6%E8%AF%AD%E9%9F%B3%E5%94%A4%E9%86%92%E5%92%8C%E8%AF%86%E5%88%AB%E9%83%BD%E6%AD%A3%E5%B8%B8%E4%BD%86%E5%8A%A0%E5%85%A5hotwards%E7%9A%84%E8%AE%BE%E7%BD%AE%E5%90%8E%E8%AF%86%E5%88%AB%E5%87%BA%E7%AC%AC%E4%B8%80%E5%8F%A5%E8%AF%9D%E5%90%8E%E5%B0%B1%E4%BC%9A%E8%BF%9B%E7%A8%8B%E5%B4%A9%E6%BA%83" class="hash-link" aria-label="Java的asr/kws 实时语音唤醒和识别都正常，但加入hotwards的设置后，识别出第一句话后就会进程崩溃的直接链接" title="Java的asr/kws 实时语音唤醒和识别都正常，但加入hotwards的设置后，识别出第一句话后就会进程崩溃的直接链接">​</a></h3>
+<p>多次dump文件后发现都是因为sherpa-onnx-jni.dll的异常：siginfo: EXCEPTION_ACCESS_VIOLATION (0xc0000005), reading address 0x0000000000000070。
+Jni使用的下载的jni_sherpa-onnx-v1.10.27（26版本也有同样问题）。asr模型使用的是sherpa-onnx-streaming-zipformer-bilingual-zh-en-2023-02-20。跑在Win11 64位笔记本的CPU上（ubuntu也一样有该问题）。</p>
+<p>反馈给社区后，很快给出了从master新构建的jni，验证后正常（win11/ubuntu）。官方预计在v1.10.28版本中修复。</p>]]></content:encoded>
+            <category>sherpa</category>
+            <category>asr</category>
+            <category>tts</category>
+            <category>kws</category>
+        </item>
+    </channel>
+</rss>
