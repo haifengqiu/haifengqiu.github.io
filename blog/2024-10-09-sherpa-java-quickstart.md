@@ -5,7 +5,7 @@ authors: zihong
 tags: [sherpa, asr, tts, kws]
 ---
 
-sherpa是新一代Kaldy的部署框架。这里使用sherpa-onnx来实现一个本地智能语音助手。
+sherpa是新一代Kaldi的部署框架。这里使用sherpa-onnx来实现一个本地智能语音助手。
 
 它将支持流式的关键词唤醒和语音识别、文本转语音、热词等，且整个过程中无需互联网，可以没有GPU，适合部署在边缘侧/用户侧设备上。
 
