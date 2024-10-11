@@ -12,8 +12,8 @@
         <id>https://haifengqiu.github.io/blog/sherpa-java-quickstart</id>
         <link href="https://haifengqiu.github.io/blog/sherpa-java-quickstart"/>
         <updated>2024-10-09T00:00:00.000Z</updated>
-        <summary type="html"><![CDATA[sherpa是新一代Kaldy的部署框架。这里使用sherpa-onnx来实现一个本地智能语音助手。]]></summary>
-        <content type="html"><![CDATA[<p>sherpa是新一代Kaldy的部署框架。这里使用sherpa-onnx来实现一个本地智能语音助手。</p>
+        <summary type="html"><![CDATA[sherpa是新一代Kaldi的部署框架。这里使用sherpa-onnx来实现一个本地智能语音助手。]]></summary>
+        <content type="html"><![CDATA[<p>sherpa是新一代Kaldi的部署框架。这里使用sherpa-onnx来实现一个本地智能语音助手。</p>
 <p>它将支持流式的关键词唤醒和语音识别、文本转语音、热词等，且整个过程中无需互联网，可以没有GPU，适合部署在边缘侧/用户侧设备上。</p>
 <p>考虑到java开发者和基于java的应用系统更为广泛，撰写此文，也为sherpa社区做一点微薄贡献。感谢sherpa开源社区。</p>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="写在前面">写在前面<a href="https://haifengqiu.github.io/blog/sherpa-java-quickstart#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2" class="hash-link" aria-label="写在前面的直接链接" title="写在前面的直接链接">​</a></h2>
