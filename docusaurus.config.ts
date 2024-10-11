@@ -90,7 +90,7 @@ const config: Config = {
         },
         {to: '/blog', label: '博客', position: 'left'},
         {
-          href: 'https://github.com/haifengqiu',
+          href: 'https://github.com/haifengqiu/haifengqiu.github.io',
           label: 'GitHub',
           position: 'right',
         },
@@ -126,7 +126,7 @@ const config: Config = {
             },
             {
               label: 'GitHub',
-              href: 'https://github.com/haifengqiu',
+              href: 'https://github.com/haifengqiu/haifengqiu.github.io',
             },
           ],
         },
@@ -137,7 +137,24 @@ const config: Config = {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
     },
+    // 在自定义的comment组件里使用下列配置
+    giscus: {
+      repo: 'haifengqiu/haifengqiu.github.io',
+      repoId: 'R_kgDOM-E3GQ',
+      category: 'Announcements',
+      categoryId: 'DIC_kwDOM-E3Gc4CjO7-',
+      mapping: 'pathname',
+      reactionsEnabled: '1', // 显示点赞等反应
+      theme: 'light', // 主题风格，可选 'light', 'dark', 'dark_dimmed'
+      term: "聊五毛钱?",
+      emitMetadata: "0",
+      loading: "lazy",
+      strict: "0",
+      inputPosition: "bottom",
+      lang: "zh-CN",
+    },
   } satisfies Preset.ThemeConfig,
+  // plugins: ['@docusaurus/plugin-giscus'],
 };
 
 export default config;
