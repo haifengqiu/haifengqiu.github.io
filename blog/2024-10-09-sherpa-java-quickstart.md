@@ -50,7 +50,7 @@ java api见[官方文档章节](https://k2-fsa.github.io/sherpa/onnx/java-api/bu
 java调用的示例代码在上述章节中也提到了，但确实数量较少。需要发挥一下主观能动性和大模型的能力，对比联想+连猜带蒙。
 
 ## 构建项目
-java项目的基础结构这里不赘述。
+java项目的基础结构这里不赘述。可以参考 https://github.com/haifengqiu/sherpa-onnx-java-demo/tree/main 。
 ### jni相关的vm配置
 在idea的运行配置、启动脚本里增加一个java vm的参数配置：
 ```
