@@ -14,6 +14,21 @@ kws:
   permalink: /kws
   description: kws tag description 
 
+agent:
+  label: agent
+  permalink: /agent
+  description: agent tag description 
+
+dify:
+  label: dify
+  permalink: /dify
+  description: dify tag description   
+
+crewai:
+  label: crewai
+  permalink: /crewai
+  description: crewai tag description   
+
 # 产商类
 sherpa:
   label: sherpa
