@@ -52,6 +52,8 @@
 <p>在对话过程中支持用户上传文件，配备文档提取器将文档解析为文本供 LLM 理解。</p>
 <p>对于音频文件，可以使用 gpt-4o-audio-preview 等支持多模态输入的模型直接处理音频，无需额外的提取器。</p>
 <p>对于视频和其他文件类型，暂无对应的提取器，需要应用开发者接入外部工具进行处理。</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="持续改进">持续改进<a href="https://haifengqiu.github.io/blog/crewai&amp;dify#%E6%8C%81%E7%BB%AD%E6%94%B9%E8%BF%9B" class="hash-link" aria-label="持续改进的直接链接" title="持续改进的直接链接">​</a></h2>
+<p>首先两者都有单步重放、单步调试的能力，来确认新配置/新模型/新数据的改进效果。而Dify的持续改进优势更多在数据上，在知识库的管理上，可以人工标注、召回测试等。而Crew AI的持续改进优势更多在agent能力上，提供了基于命令行和编程方式的训练agent的机制。</p>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="其他">其他<a href="https://haifengqiu.github.io/blog/crewai&amp;dify#%E5%85%B6%E4%BB%96" class="hash-link" aria-label="其他的直接链接" title="其他的直接链接">​</a></h2>
 <p>基于agent去实现客服理论上是适合的，但受限于LLM和agent目前的能力，在落地时还是有不少问题的，不仅只是rag准确度的问题。可以参考<a href="https://www.zhihu.com/question/624354739" target="_blank" rel="noopener noreferrer">知乎上的这篇回答</a>。</p>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="参考资料">参考资料<a href="https://haifengqiu.github.io/blog/crewai&amp;dify#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99" class="hash-link" aria-label="参考资料的直接链接" title="参考资料的直接链接">​</a></h2>
